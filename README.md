@@ -1,1 +1,1 @@
-# tinytimetracker
+# thetinytimetracker
