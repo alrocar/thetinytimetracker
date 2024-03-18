@@ -1,6 +1,6 @@
 
 body {
-  background: #343E59;
+  background: #3b3b3b;
   color: #777;
   font-family: Montserrat, Arial, sans-serif;
 }
@@ -24,7 +24,7 @@ body {
 }
 
 .box {
-  background-color: #2B2D3E;
+  background-color: #2b2b2b;
   padding: 25px 20px;
 }
 
@@ -50,6 +50,17 @@ body {
   z-index: 3;
   top: -8px;
   color: #fff;
+}
+
+.btn-outline-warning {
+  color: #FFEE92;
+  border-color: #FFEE92;
+}
+
+.btn-outline-warning:hover, .btn-outline-warning.toggled {
+  color: #212529;
+  background: #FFEE92;
+  border-color: #FFEE92;
 }
 
 
@@ -84,3 +95,53 @@ body {
 .sparkboxes .box4 {
   background-color: #A4FFAF;
 } */
+
+/* Light mode styles */
+.light-mode body {
+  background: #F3F4FA;
+  color: #333;
+}
+
+.light-mode .body-bg {
+  background: #F3F4FA !important;
+}
+
+.light-mode h1,
+.light-mode h2,
+.light-mode h3,
+.light-mode h4,
+.light-mode h5,
+.light-mode h6,
+.light-mode strong {
+  font-weight: 600;
+}
+
+.light-mode .box {
+  background-color: #FFFFFF;
+}
+
+.light-mode .shadow {
+  box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
+}
+
+.light-mode .sparkboxes .box {
+  background-color: #F3F4FA;
+  box-shadow: 0px 1px 15px 1px rgba(69, 65, 78, 0.08);
+}
+
+.light-mode .sparkboxes .box .details {
+  color: #333;
+}
+
+.light-mode .sparkboxes strong {
+  color: #333;
+}
+
+
+.wrapper {
+  display: none;
+}
+
+.wrapper.toggled {
+  display: block;
+}

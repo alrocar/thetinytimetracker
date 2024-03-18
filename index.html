@@ -23,25 +23,45 @@
   </head>
 
   <body>
-    <div id="wrapper">
+    <div id="monthly" class="wrapper toggled">
       <div class="content-area">
         <div class="container-fluid">
-          <!-- <div class="text-left mt-3 mb-3 d-fixed">
-            <a
-              href="https://github.com/apexcharts/apexcharts.js/tree/master/samples/vanilla-js/dashboards/dark"
-              target="_blank"
-              class="btn btn-outline-warning mr-2"
-            >
-              <span class="btn-text">REAL-TIME</span>
-            </a>
-          </div> -->
+          <div class="row mt-3" style="margin-left: 0;">
+              <div class="text-left mt-3 mb-3 d-fixed">
+                <a
+                  href="#"
+                  class="btn btn-outline-warning toggle-button mr-2"
+                  id="rt-toggle"
+                >
+                  <span class="btn-text">Today</span>
+                </a>
+              </div>
+              <div class="text-le1ft mt-3 mb-3 d-fixed">
+                <a
+                  href="#"
+                  class="btn btn-outline-warning toggle-button mr-2"
+                  id="weekly-toggle"
+                >
+                  <span class="btn-text">Week to date</span>
+                </a>
+              </div>
+              <div class="text-left mt-3 mb-3 d-fixed">
+                <a
+                  href="#"
+                  class="btn btn-outline-warning toggle-button mr-2 toggled"
+                  id="monthly-toggle"
+                >
+                  <span class="btn-text">Last 30 days</span>
+                </a>
+              </div>
+          </div>
           <div class="main">
             <div class="row sparkboxes mt-4">
               <div class="col-md-3">
                 <div class="box box1">
                   <div class="details">
                     <h3 id="worked"></h3>
-                    <h4>WORK HOURS</h4>
+                    <h4>WORK</h4>
                   </div>
                   <div id="spark1"></div>
                 </div>
@@ -76,9 +96,9 @@
             </div>
 
             <div class="row mt-4">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <div class="box shadow mt-4">
-                  <div id="timeline"></div>
+                  <div id="heatmap"></div>
                 </div>
               </div>
             </div>
@@ -97,9 +117,14 @@
             </div>
 
             <div class="row mt-4">
-              <div class="col-md-12">
+              <div class="col-md-6">
                 <div class="box shadow mt-4">
                   <div id="line-adwords"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="line-adwords-tab"></div>
                 </div>
               </div>
             </div>
@@ -107,7 +132,7 @@
             <div class="row mt-4">
               <div class="col-md-12">
                 <div class="box shadow mt-4">
-                  <div id="line-adwords-tab"></div>
+                  <div id="timeline"></div>
                 </div>
               </div>
             </div>

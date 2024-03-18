@@ -1,10 +1,52 @@
-// const queryString = window.location.search;
-// const urlParams = new URLSearchParams(queryString);
-// var token = urlParams.get('token');
+var token = localStorage.getItem('token');
+var dashboardType = 'monthly';
+var tbSemver = '';
 
-var token = 'p.eyJ1IjogIjkyMTY1Nzk1LWIxNDMtNDhmZC1iZDk0LTk1MmE2NWIxOTY2MiIsICJpZCI6ICIwMTE5ZWIxOS01ZDA5LTRjYmEtOGU1My02M2RiNzIwODRiZWUiLCAiaG9zdCI6ICJldV9zaGFyZWQifQ.vjuwUTruh6I_2c-RZJeF_qCG6vEwDGVjmk_gMF1CcPs'
+var dashboardOptions = {
+  "monthly": {
+    "timeline": {
+      chart: {
+        height: 650,
+        type: 'rangeBar'
+      },
+    },
+  },
+  "weekly": {
+    "timeline": {
+      chart: {
+        height: 250,
+        type: 'rangeBar'
+      },
+    }
+  },
+  "rt": {
+    linechart: {
+      chart: {
+        height: 250,
+        type: 'rangeBar'
+      },
+    }
+  }
+};
+
+function getDashboardType() {
+  return dashboardType;
+}
+
+if (!token) {
+  const urlParams = new URLSearchParams(window.location.search);
+  token = urlParams.get('token');
+
+  if (token) {
+    localStorage.setItem('token', token);
+  }
+}
+
+
 
 var colors = ["#FFEE92", "#FF73DC", "#63FFE9", "#A4FFAF", "#FEFEFE"]
+//var colors = ["#FFA07A", "#ADD8E6", "#90EE90", "#FFD700", "#DDA0DD"];
+
 //var colors = ["#003f5c","#2f4b7c","#665191","#a05195","#d45087","#f95d6a","#ff7c43","#ffa600"].reverse()
 window.charts = {};
 window.Apex = {
@@ -39,6 +81,7 @@ function addChart(id, options) {
     chart.render();
     window.charts[id] = chart;
   } else {
+    window.charts[id].updateSeries(options["series"])
     window.charts[id].updateOptions(options)
   }
 }
@@ -102,8 +145,8 @@ function spark(url, id, title) {
   .catch(error => console.error(`Error fetching ${id} data:`, error));
 }
 
-function timeline() {
-  fetch(`https://api.tinybird.co/v0/pipes/timeline_2.json?token=${token}`)
+function timeline(url) {
+  fetch(url)
   .then(response => response.json())
   .then(data => {
     var options = {
@@ -114,10 +157,7 @@ function timeline() {
       ],
       // colors: ["#f95d6a"],
       colors: colors,
-      chart: {
-        height: 250,
-        type: 'rangeBar'
-      },
+      chart: dashboardOptions[getDashboardType()]["timeline"]["chart"],
       plotOptions: {
         bar: {
           horizontal: true,
@@ -131,15 +171,15 @@ function timeline() {
         width: 1
       },
       fill: {
-        type: 'pattern',
-        opacity: 1
+        type: 'solid',
+        opacity: 0.5
       },
       legend: {
         position: 'top',
         horizontalAlign: 'left'
       },
       title: {
-        text: 'Working hours timeline',
+        text: 'Work hours timeline',
         align: 'left',
         offsetY: 5,
         offsetX: 20
@@ -178,14 +218,14 @@ function barchart(url, id, title) {
       },
       title: {
         text: title,
-        align: 'left',
+        align: 'right',
         offsetY: 13,
-        offsetX: 20
+        offsetX: 0
       },
       legend: {
         position: 'top',
-        horizontalAlign: 'right',
-        offsetY: -20
+        horizontalAlign: 'left',
+        offsetY: 0
       }
     }
     addChart(id, optionsBar)
@@ -201,12 +241,14 @@ function linechart(url, id, title) {
     var optionsLine = {
       chart: {
         height: 328,
-        type: 'line',
+        // type: 'line',
+        type: 'area',
+        stacked: false,
         zoom: {
           enabled: false
         },
         dropShadow: {
-          enabled: true,
+          enabled: false,
           top: 3,
           left: 2,
           blur: 4,
@@ -217,14 +259,27 @@ function linechart(url, id, title) {
         curve: 'smooth',
         width: 2
       },
+      fill: {
+        type: 'solid',
+        colors: colors,
+        opacity: 0
+        // gradient: {
+        //   shade: 'dark',
+        //   inverseColors: true,
+        //   shadeIntensity: 1,
+        //   opacityFrom: 0.1,
+        //   opacityTo: 0.9,
+        //   stops: [0, 90, 100]
+        // }
+      },
       //colors: ["#003f5c","#2f4b7c","#665191","#a05195","#d45087","#f95d6a","#ff7c43","#ffa600"].reverse(),
       colors: colors,
       series: data["data"],
       title: {
         text: title,
-        align: 'left',
+        align: 'right',
         offsetY: 13,
-        offsetX: 20
+        offsetX: 0
       },
       // subtitle: {
       //   text: 'Statistics',
@@ -232,10 +287,10 @@ function linechart(url, id, title) {
       //   offsetX: 20
       // },
       markers: {
-        size: 6,
+        size: 2,
         strokeWidth: 0,
         hover: {
-          size: 9
+          size: 4
         }
       },
       grid: {
@@ -252,8 +307,8 @@ function linechart(url, id, title) {
       },
       legend: {
         position: 'top',
-        horizontalAlign: 'right',
-        offsetY: -20
+        horizontalAlign: 'left',
+        offsetY: 0
       }
     }
 
@@ -262,32 +317,145 @@ function linechart(url, id, title) {
   .catch(error => console.error('Error fetching linechart data:', error));
 }
 
-const spark1 = `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}`
-const spark2 = `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=slack`
-const spark3 = `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=coding`
-const spark4 = `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=git`
-const timeinapp = `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=3&token=${token}`
-const timeintab = `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=3&token=${token}`
+function heatmap(url, id, title) {
+  fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    var options = {
+      series: data['data'],
+      chart: {
+        height: 250,
+        type: 'heatmap',
+      },
+      dataLabels: {
+        enabled: false
+      },
+      colors: ['#FFEE92'],
+      xaxis: {
+        type: 'category',
+        categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+      },
+      title: {
+        text: title,
+        align: 'right',
+        offsetY: 13,
+        offsetX: 0
+      },
+      grid: {
+        padding: {
+          right: 20
+        }
+      },
+      legend: {
+        position: 'top',
+        horizontalAlign: 'left',
+        offsetY: 0
+      },
+      plotOptions: {
+        heatmap: {
+          shadeIntensity: 1,
+          radius: 0,
+          useFillColorAsStroke: false,
+          colorScale: {
+            ranges: [{
+                from: 0,
+                to: 7,
+                name: 'low',
+                color: colors[2]
+              },
+              {
+                from: 7,
+                to: 9,
+                name: 'standard',
+                color: colors[3]
+              },
+              {
+                from: 9,
+                to: 10,
+                name: 'extended',
+                color: colors[0]
+              },
+              {
+                from: 11,
+                to: 24,
+                name: '🚨',
+                color: colors[1]
+              }
+            ]
+          }
+        }
+      },
+    };
+    addChart(id, options)
+  })
+  .catch(error => console.error('Error fetching heatmap data:', error));
+}
 
-const lineinapp = `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=5&token=${token}&days=15`
-const lineintab = `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=5&token=${token}&days=15`
+const spark1 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const spark2 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=slack&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const spark3 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=coding&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const spark4 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=git&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const timeinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const timeintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const lineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=5&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const lineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=5&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const timelineurl = () => `https://api.tinybird.co/v0/pipes/timeline_2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const heatmapurl = () => `https://api.tinybird.co/v0/pipes/heatmap.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
 
 function init() {
-  spark(spark1, 'spark1', 'worked')
-  spark(spark2, 'spark2', 'slack')
-  spark(spark3, 'spark3', 'coding')
-  spark(spark4, 'spark4', 'git')
+  spark(spark1(), 'spark1', 'worked')
+  spark(spark2(), 'spark2', 'slack')
+  spark(spark3(), 'spark3', 'coding')
+  spark(spark4(), 'spark4', 'git')
 
-  timeline()
+  heatmap(heatmapurl(), 'heatmap', 'Work hours distribution')
+  timeline(timelineurl())
 
-  barchart(timeinapp, 'barchart', 'Time in app')
-  barchart(timeintab, 'barchart-tab', 'Time in browser tab')
+  barchart(timeinapp(), 'barchart', 'Time in app')
+  barchart(timeintab(), 'barchart-tab', 'Time in browser tab')
 
-  linechart(lineinapp, 'line-adwords', 'Time in app')
-  linechart(lineintab, 'line-adwords-tab', 'Time in browser tab')
+  linechart(lineinapp(), 'line-adwords', 'Time in app')
+  linechart(lineintab(), 'line-adwords-tab', 'Time in browser tab')
 }
 
 init()
 // window.setInterval(function () {
 //   init()
 // }, 10000)
+
+const buttons = document.getElementsByClassName('toggle-button');
+Array.from(buttons).forEach((button) => {
+  button.addEventListener('click', () => {
+      dashboardType = button.id.split('-')[0];
+      init();
+      currentWrapper = document.getElementById(dashboardType);
+      currentWrapper.classList.toggle('toggled');
+      const wrappers = document.getElementsByClassName('wrapper');
+      Array.from(wrappers).forEach((w) => {
+        if (w.classList.contains('toggled') && w != currentWrapper) {
+          w.classList.toggle('toggled')
+        }
+      });
+
+      if (button.classList.contains('toggled')) {
+        return;
+      }
+      const others = document.getElementsByClassName('toggle-button');
+      Array.from(others).forEach((b) => {
+        if (b.classList.contains('toggled') && b != button) {
+          b.classList.toggle('toggled')
+        }
+      });
+      button.classList.toggle('toggled')
+  });
+});
+
+
+
+// real-time -> include pulse / next update 10s
+// work hours / slack / coding / git
+// active app / active tab
+// working hours timeline today
+// horizontal barchart (limit 10):
+//   - time in app today
+//   - time in browser today
