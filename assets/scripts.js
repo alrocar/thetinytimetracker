@@ -317,6 +317,79 @@ function linechart(url, id, title) {
   .catch(error => console.error('Error fetching linechart data:', error));
 }
 
+function treemap(url, id, title) {
+  fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    var options = {
+      series: data['data'],
+      plotOptions: {
+        treemap: {
+          enableShades: true,
+          useFillColorAsStroke: false,
+          shadeIntensity: 0.5,
+          reverseNegativeShade: true,
+          // colorScale: {
+          //   ranges: [{
+          //       from: 0,
+          //       to: 1,
+          //       color: colors[2]
+          //     },
+          //     {
+          //       from: 7,
+          //       to: 9,
+          //       name: 'standard',
+          //       color: colors[3]
+          //     },
+          //     {
+          //       from: 9,
+          //       to: 10,
+          //       name: 'extended',
+          //       color: colors[0]
+          //     },
+          //     {
+          //       from: 11,
+          //       to: 24,
+          //       name: '🚨',
+          //       color: colors[1]
+          //     }
+          //   ]
+          // }
+        }
+      },
+      legend: {
+        show: true,
+        position: 'top',
+        horizontalAlign: 'left',
+        offsetY: 0
+      },
+      dataLabels: {
+        format: 'scale',
+        enabled: true,
+        style: {
+          fontSize: '12px',
+        },
+        // formatter: function(text, op) {
+        //   // return [text, op.value]
+        //   return [text, '']
+        // },
+        offsetY: -4
+      },
+      chart: {
+        height: 350,
+        type: 'treemap'
+      },
+      title: {
+        text: title,
+        align: 'right',
+        offsetY: 13,
+        offsetX: 0
+      }
+      };
+    addChart(id, options)
+  })
+  .catch(error => console.error('Error fetching treemap data:', error));
+}
 function heatmap(url, id, title) {
   fetch(url)
   .then(response => response.json())
@@ -324,7 +397,7 @@ function heatmap(url, id, title) {
     var options = {
       series: data['data'],
       chart: {
-        height: 250,
+        height: 350,
         type: 'heatmap',
       },
       dataLabels: {
@@ -401,6 +474,7 @@ const lineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json
 const lineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=5&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
 const timelineurl = () => `https://api.tinybird.co/v0/pipes/timeline_2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
 const heatmapurl = () => `https://api.tinybird.co/v0/pipes/heatmap.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const treemapurl = () => `https://api.tinybird.co/v0/pipes/treemap.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
 
 function init() {
   spark(spark1(), 'spark1', 'worked')
@@ -409,6 +483,7 @@ function init() {
   spark(spark4(), 'spark4', 'git')
 
   heatmap(heatmapurl(), 'heatmap', 'Work hours distribution')
+  treemap(treemapurl(), 'treemap', 'App hours distribution')
   timeline(timelineurl())
 
   barchart(timeinapp(), 'barchart', 'Time in app')
