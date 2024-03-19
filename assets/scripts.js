@@ -1,9 +1,9 @@
 var token = localStorage.getItem('token');
-var dashboardType = 'monthly';
+var dashboardType = 'month';
 var tbSemver = '';
 
 var dashboardOptions = {
-  "monthly": {
+  "month": {
     "timeline": {
       chart: {
         height: 650,
@@ -94,7 +94,7 @@ function spark(url, id, title) {
       chart: {
         id: id,
         group: 'sparks',
-        type: 'line',
+        type: 'area',
         height: 80,
         sparkline: {
           enabled: true
@@ -123,7 +123,7 @@ function spark(url, id, title) {
           left: 110
         }
       },
-      colors: ['#fff'],
+      colors: colors,
       tooltip: {
         x: {
           show: false
@@ -140,7 +140,7 @@ function spark(url, id, title) {
 
     addChart(id, spark)
     const sum = data["data"][0]["data"].reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    document.querySelector(`#${title}`).textContent = Math.round(sum)
+    document.querySelector(`#${title}`).textContent = `${Math.round(sum)} h.`
   })
   .catch(error => console.error(`Error fetching ${id} data:`, error));
 }
@@ -321,41 +321,24 @@ function treemap(url, id, title) {
   fetch(url)
   .then(response => response.json())
   .then(data => {
+    const seriesData = data['data'].sort((a, b) => b.y - a.y).filter(item => item.y > 1).map((item, i) => ({
+      x: item.x,
+      y: item.y,
+      fillColor: item.x.indexOf('.') > -1 ? `${colors[2]}${(255 - i * 10).toString(16)}` : `${colors[3]}${(255 - i * 10).toString(16)}`,
+    }));
     var options = {
-      series: data['data'],
-      plotOptions: {
-        treemap: {
-          enableShades: true,
-          useFillColorAsStroke: false,
-          shadeIntensity: 0.5,
-          reverseNegativeShade: true,
-          // colorScale: {
-          //   ranges: [{
-          //       from: 0,
-          //       to: 1,
-          //       color: colors[2]
-          //     },
-          //     {
-          //       from: 7,
-          //       to: 9,
-          //       name: 'standard',
-          //       color: colors[3]
-          //     },
-          //     {
-          //       from: 9,
-          //       to: 10,
-          //       name: 'extended',
-          //       color: colors[0]
-          //     },
-          //     {
-          //       from: 11,
-          //       to: 24,
-          //       name: '🚨',
-          //       color: colors[1]
-          //     }
-          //   ]
-          // }
-        }
+      series: [{
+        data: seriesData
+      }],
+      chart: {
+        height: 450,
+        type: 'treemap'
+      },
+      title: {
+        text: title,
+        align: 'right',
+        offsetY: 13,
+        offsetX: 0
       },
       legend: {
         show: true,
@@ -364,28 +347,24 @@ function treemap(url, id, title) {
         offsetY: 0
       },
       dataLabels: {
-        format: 'scale',
         enabled: true,
         style: {
-          fontSize: '12px',
+          fontSize: '60px',
         },
-        // formatter: function(text, op) {
-        //   // return [text, op.value]
-        //   return [text, '']
-        // },
+        formatter: function(text, op) {
+          return [text, op.value]
+        },
         offsetY: -4
       },
-      chart: {
-        height: 350,
-        type: 'treemap'
+      stroke: {
+        width: 3,
       },
-      title: {
-        text: title,
-        align: 'right',
-        offsetY: 13,
-        offsetX: 0
+      plotOptions: {
+        treemap: {
+          distributed: true,
+        }
       }
-      };
+    }
     addChart(id, options)
   })
   .catch(error => console.error('Error fetching treemap data:', error));
@@ -397,7 +376,7 @@ function heatmap(url, id, title) {
     var options = {
       series: data['data'],
       chart: {
-        height: 350,
+        height: 450,
         type: 'heatmap',
       },
       dataLabels: {
@@ -473,8 +452,8 @@ const timeintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json
 const lineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=5&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
 const lineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=5&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
 const timelineurl = () => `https://api.tinybird.co/v0/pipes/timeline_2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-const heatmapurl = () => `https://api.tinybird.co/v0/pipes/heatmap.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-const treemapurl = () => `https://api.tinybird.co/v0/pipes/treemap.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const heatmapurl = () => `https://api.tinybird.co/v0/pipes/heatmap.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&heatmap=1`
+const treemapurl = () => `https://api.tinybird.co/v0/pipes/treemap_v2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
 
 function init() {
   spark(spark1(), 'spark1', 'worked')
