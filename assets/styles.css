@@ -145,3 +145,100 @@ body {
 .wrapper.toggled {
   display: block;
 }
+
+
+.animation {
+  span {
+    margin-top: 32px;
+    display:block;
+    color: rgba(255,255,255,0.5);
+    font-family: sans-serif;
+    span {
+      color: rgba(255,255,255,0.2);
+      margin-top:4px;
+      font-size:12px;				 
+    }
+  }
+}
+.dot {
+  margin-right:0;
+  height: 10px;
+  position:absolute;
+  width: 10px;
+  border-radius: 100%;
+/* Oval: */
+background-image: linear-gradient(-180deg, #FFE27A 0%, #F689B9 100%);
+box-shadow: 0 -2px 4px 0 rgba(255, 237, 186, 0.70), 0 2px 4px 0 rgba(242, 141, 185, 0.70), inset 0 1px 0 0 rgba(255, 245, 217, 0.40);
+  transition: transform 200ms ease-out;
+  &:hover {
+    cursor: pointer;
+    transform:scale(1.4);
+  }
+  &:before {
+    content:"";
+    animation: ripple 4s infinite;
+    animation-timing-function:ease-out;
+    height:1000%;
+    width:1000%;
+    position:absolute;
+    top:-45px;
+    left:-45px;
+    display:block;
+    box-sizing:border-box;
+    border-radius:100%;
+    // border:1px solid #F28DB9;
+    box-shadow: 0 0 3px 3px #F28DB9;
+  }
+  &:after {
+    content:"";
+    animation: ripple-delayed 4s infinite;
+    animation-timing-function:ease-out;
+    height:1000%;
+    width:1000%;
+    position:absolute;
+    top:-45px;
+    left:-45px;
+    display:block;
+    box-sizing:border-box;
+    border-radius:100%;
+    // border:1px solid #F28DB9;
+    box-shadow: 0 0 3px 3px #F28DB9;
+  }
+}
+ 
+ @keyframes ripple {
+   0% {
+     transform:scale(0.1);
+     opacity: 0;
+   }
+   2.5% {
+     opacity:0.6;
+   }
+   50% {
+     transform:scale(0.8);
+     opacity:0;
+   }
+   100% {
+     // Puts delay between animation loops
+     // Must be equal to previous step 
+     transform:scale(0.8);
+     opacity:0;
+   }
+ }
+ 
+ @keyframes ripple-delayed {
+   0% {
+     transform:scale(0.1);
+     opacity: 0;
+   }
+   6% {
+     opacity:0.6;
+     transform:scale(0.1);
+   }
+   100% {
+     // Puts delay between animation loops
+     // Must be equal to previous step 
+     transform:scale(0.8);
+     opacity:0;
+   }
+ }
