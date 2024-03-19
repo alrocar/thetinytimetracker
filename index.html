@@ -23,74 +23,75 @@
   </head>
 
   <body>
-    <div id="month" class="wrapper toggled">
-      <div class="content-area">
-        <div class="container-fluid">
-          <div class="row mt-3" style="margin-left: 0;">
-              <div class="text-left mt-3 mb-3 d-fixed">
-                <a
-                  href="#"
-                  class="btn btn-outline-warning toggle-button mr-2"
-                  id="rt-toggle"
-                >
-                  <span class="btn-text">Today</span>
-                </a>
-              </div>
-              <div class="text-le1ft mt-3 mb-3 d-fixed">
-                <a
-                  href="#"
-                  class="btn btn-outline-warning toggle-button mr-2"
-                  id="weekly-toggle"
-                >
-                  <span class="btn-text">Week to date</span>
-                </a>
-              </div>
-              <div class="text-left mt-3 mb-3 d-fixed">
-                <a
-                  href="#"
-                  class="btn btn-outline-warning toggle-button mr-2 toggled"
-                  id="month-toggle"
-                >
-                  <span class="btn-text">Last 30 days</span>
-                </a>
-              </div>
+    <div class="content-area">
+      <div class="container-fluid">
+        <div class="row mt-3" style="margin-left: 0;">
+          <div class="text-left mt-3 mb-3 d-fixed">
+            <a
+              href="#"
+              class="btn btn-outline-warning toggle-button mr-2"
+              id="rt-toggle"
+            >
+              <span class="btn-text">Today</span>
+            </a>
           </div>
+          <div class="text-le1ft mt-3 mb-3 d-fixed">
+            <a
+              href="#"
+              class="btn btn-outline-warning toggle-button mr-2"
+              id="weekly-toggle"
+            >
+              <span class="btn-text">Week to date</span>
+            </a>
+          </div>
+          <div class="text-left mt-3 mb-3 d-fixed">
+            <a
+              href="#"
+              class="btn btn-outline-warning toggle-button mr-2 toggled"
+              id="month-toggle"
+            >
+              <span class="btn-text">Last 30 days</span>
+            </a>
+          </div>
+        </div>
+        
+        <div id="rt" class="wrapper">
           <div class="main">
             <div class="row sparkboxes mt-4">
               <div class="col-md-3">
                 <div class="box box1">
                   <div class="details">
-                    <h3 id="worked"></h3>
+                    <h3 id="worked-rt"></h3>
                     <h4>WORK</h4>
                   </div>
-                  <div id="spark1"></div>
+                  <div id="spark1-rt"></div>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="box box2">
                   <div class="details">
-                    <h3 id="slack"></h3>
+                    <h3 id="slack-rt"></h3>
                     <h4>SLACK</h4>
                   </div>
-                  <div id="spark2"></div>
+                  <div id="spark2-rt"></div>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="box box3">
                   <div class="details">
-                    <h3 id="coding"></h3>
+                    <h3 id="coding-rt"></h3>
                     <h4>CODING</h4>
                   </div>
-                  <div id="spark3"></div>
+                  <div id="spark3-rt"></div>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="box box4">
                   <div class="details">
-                    <h3 id="git"></h3>
+                    <h3 id="git-rt"></h3>
                     <h4>GIT</h4>
                   </div>
-                  <div id="spark4"></div>
+                  <div id="spark4-rt"></div>
                 </div>
               </div>
             </div>
@@ -98,25 +99,12 @@
             <div class="row mt-4">
               <div class="col-md-6">
                 <div class="box shadow mt-4">
-                  <div id="heatmap"></div>
+                  <div id="heatmap-rt"></div>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="box shadow mt-4">
-                  <div id="treemap"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row mt-4">
-              <div class="col-md-6">
-                <div class="box shadow mt-4">
-                  <div id="barchart" class=""></div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="box shadow mt-4">
-                  <div id="barchart-tab" class=""></div>
+                  <div id="treemap-rt"></div>
                 </div>
               </div>
             </div>
@@ -124,12 +112,25 @@
             <div class="row mt-4">
               <div class="col-md-6">
                 <div class="box shadow mt-4">
-                  <div id="line-adwords"></div>
+                  <div id="barchart-rt" class=""></div>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="box shadow mt-4">
-                  <div id="line-adwords-tab"></div>
+                  <div id="barchart-tab-rt" class=""></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="timeinapp-rt"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="timeinbrowser-rt"></div>
                 </div>
               </div>
             </div>
@@ -137,7 +138,185 @@
             <div class="row mt-4">
               <div class="col-md-12">
                 <div class="box shadow mt-4">
-                  <div id="timeline"></div>
+                  <div id="timeline-rt"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="weekly" class="wrapper">
+          <div class="main">
+            <div class="row sparkboxes mt-4">
+              <div class="col-md-3">
+                <div class="box box1">
+                  <div class="details">
+                    <h3 id="worked-weekly"></h3>
+                    <h4>WORK</h4>
+                  </div>
+                  <div id="spark1-weekly"></div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="box box2">
+                  <div class="details">
+                    <h3 id="slack-weekly"></h3>
+                    <h4>SLACK</h4>
+                  </div>
+                  <div id="spark2-weekly"></div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="box box3">
+                  <div class="details">
+                    <h3 id="coding-weekly"></h3>
+                    <h4>CODING</h4>
+                  </div>
+                  <div id="spark3-weekly"></div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="box box4">
+                  <div class="details">
+                    <h3 id="git-weekly"></h3>
+                    <h4>GIT</h4>
+                  </div>
+                  <div id="spark4-weekly"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="heatmap-weekly"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="treemap-weekly"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="barchart-weekly" class=""></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="barchart-tab-weekly" class=""></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="timeinapp-weekly"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="timeinbrowser-weekly"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-12">
+                <div class="box shadow mt-4">
+                  <div id="timeline-weekly"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="month" class="wrapper toggled">
+          <div class="main">
+            <div class="row sparkboxes mt-4">
+              <div class="col-md-3">
+                <div class="box box1">
+                  <div class="details">
+                    <h3 id="worked-month"></h3>
+                    <h4>WORK</h4>
+                  </div>
+                  <div id="spark1-month"></div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="box box2">
+                  <div class="details">
+                    <h3 id="slack-month"></h3>
+                    <h4>SLACK</h4>
+                  </div>
+                  <div id="spark2-month"></div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="box box3">
+                  <div class="details">
+                    <h3 id="coding-month"></h3>
+                    <h4>CODING</h4>
+                  </div>
+                  <div id="spark3-month"></div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="box box4">
+                  <div class="details">
+                    <h3 id="git-month"></h3>
+                    <h4>GIT</h4>
+                  </div>
+                  <div id="spark4-month"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="heatmap-month"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="treemap-month"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="barchart-month" class=""></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="barchart-tab-month" class=""></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="timeinapp-month"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="box shadow mt-4">
+                  <div id="timeinbrowser-month"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-4">
+              <div class="col-md-12">
+                <div class="box shadow mt-4">
+                  <div id="timeline-month"></div>
                 </div>
               </div>
             </div>

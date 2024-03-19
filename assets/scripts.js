@@ -1,6 +1,19 @@
 var token = localStorage.getItem('token');
-var dashboardType = 'month';
+if (!token) {
+  const urlParams = new URLSearchParams(window.location.search);
+  token = urlParams.get('token');
+
+  if (token) {
+    localStorage.setItem('token', token);
+  }
+}
+
 var tbSemver = '';
+
+var dashboardType = 'month';
+function getDashboardType() {
+  return dashboardType;
+}
 
 var dashboardOptions = {
   "month": {
@@ -20,7 +33,7 @@ var dashboardOptions = {
     }
   },
   "rt": {
-    linechart: {
+    "timeline": {
       chart: {
         height: 250,
         type: 'rangeBar'
@@ -28,21 +41,6 @@ var dashboardOptions = {
     }
   }
 };
-
-function getDashboardType() {
-  return dashboardType;
-}
-
-if (!token) {
-  const urlParams = new URLSearchParams(window.location.search);
-  token = urlParams.get('token');
-
-  if (token) {
-    localStorage.setItem('token', token);
-  }
-}
-
-
 
 var colors = ["#FFEE92", "#FF73DC", "#63FFE9", "#A4FFAF", "#FEFEFE"]
 //var colors = ["#FFA07A", "#ADD8E6", "#90EE90", "#FFD700", "#DDA0DD"];
@@ -86,13 +84,22 @@ function addChart(id, options) {
   }
 }
 
-function spark(url, id, title) {
-  fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    var spark = {
+const spark1 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const spark2 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=slack&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const spark3 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=coding&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const spark4 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=git&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const timeinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const timeintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const lineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=5&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const lineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=5&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const timelineurl = () => `https://api.tinybird.co/v0/pipes/timeline_2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+const heatmapurl = () => `https://api.tinybird.co/v0/pipes/heatmap.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&heatmap=1`
+const treemapurl = () => `https://api.tinybird.co/v0/pipes/treemap_v2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+
+var dashboards = {
+  config: {
+    spark: {
       chart: {
-        id: id,
         group: 'sparks',
         type: 'area',
         height: 80,
@@ -107,9 +114,6 @@ function spark(url, id, title) {
           opacity: 0.2,
         }
       },
-      series: [{
-        data: data["data"][0]["data"]
-      }],
       stroke: {
         curve: 'smooth'
       },
@@ -136,26 +140,8 @@ function spark(url, id, title) {
           }
         }
       }
-    }
-
-    addChart(id, spark)
-    const sum = data["data"][0]["data"].reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-    document.querySelector(`#${title}`).textContent = `${Math.round(sum)} h.`
-  })
-  .catch(error => console.error(`Error fetching ${id} data:`, error));
-}
-
-function timeline(url) {
-  fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    var options = {
-      series: [
-        {
-          data: data['data']
-        }
-      ],
-      // colors: ["#f95d6a"],
+    },
+    timeline: {
       colors: colors,
       chart: dashboardOptions[getDashboardType()]["timeline"]["chart"],
       plotOptions: {
@@ -179,23 +165,17 @@ function timeline(url) {
         horizontalAlign: 'left'
       },
       title: {
-        text: 'Work hours timeline',
         align: 'left',
         offsetY: 5,
         offsetX: 20
       },
-    };
-
-    addChart('timeline', options)
-  })
-  .catch(error => console.error('Error fetching timeline data:', error));
-}
-
-function barchart(url, id, title) {
-  fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    var optionsBar = {
+      tooltip: {
+        custom: function(opts) {
+          return opts.w.config.series[opts.seriesIndex].data[opts.dataPointIndex].x;
+        }
+      }
+    },
+    barchart: {
       chart: {
         height: 380,
         type: 'bar',
@@ -207,17 +187,11 @@ function barchart(url, id, title) {
           horizontal: false,
         },
       },
-      //colors: ["#003f5c","#2f4b7c","#665191","#a05195","#d45087","#f95d6a","#ff7c43","#ffa600"].reverse(),
       colors: colors,
-      series: data["data"],
-      xaxis: {
-        categories: data["data"][0]["date"],
-      },
       fill: {
         opacity: 1
       },
       title: {
-        text: title,
         align: 'right',
         offsetY: 13,
         offsetX: 0
@@ -227,18 +201,8 @@ function barchart(url, id, title) {
         horizontalAlign: 'left',
         offsetY: 0
       }
-    }
-    addChart(id, optionsBar)
-  })
-  .catch(error => console.error('Error fetching barchart data:', error));
-
-}
-
-function linechart(url, id, title) {
-  fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    var optionsLine = {
+    },
+    linechart: {
       chart: {
         height: 328,
         // type: 'line',
@@ -274,9 +238,7 @@ function linechart(url, id, title) {
       },
       //colors: ["#003f5c","#2f4b7c","#665191","#a05195","#d45087","#f95d6a","#ff7c43","#ffa600"].reverse(),
       colors: colors,
-      series: data["data"],
       title: {
-        text: title,
         align: 'right',
         offsetY: 13,
         offsetX: 0
@@ -299,7 +261,6 @@ function linechart(url, id, title) {
           bottom: 0
         }
       },
-      labels: data["data"][0]["date"],
       xaxis: {
         tooltip: {
           enabled: false
@@ -310,71 +271,8 @@ function linechart(url, id, title) {
         horizontalAlign: 'left',
         offsetY: 0
       }
-    }
-
-    addChart(id, optionsLine)
-  })
-  .catch(error => console.error('Error fetching linechart data:', error));
-}
-
-function treemap(url, id, title) {
-  fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    const seriesData = data['data'].sort((a, b) => b.y - a.y).filter(item => item.y > 1).map((item, i) => ({
-      x: item.x,
-      y: item.y,
-      fillColor: item.x.indexOf('.') > -1 ? `${colors[2]}${(255 - i * 10).toString(16)}` : `${colors[3]}${(255 - i * 10).toString(16)}`,
-    }));
-    var options = {
-      series: [{
-        data: seriesData
-      }],
-      chart: {
-        height: 450,
-        type: 'treemap'
-      },
-      title: {
-        text: title,
-        align: 'right',
-        offsetY: 13,
-        offsetX: 0
-      },
-      legend: {
-        show: true,
-        position: 'top',
-        horizontalAlign: 'left',
-        offsetY: 0
-      },
-      dataLabels: {
-        enabled: true,
-        style: {
-          fontSize: '60px',
-        },
-        formatter: function(text, op) {
-          return [text, op.value]
-        },
-        offsetY: -4
-      },
-      stroke: {
-        width: 3,
-      },
-      plotOptions: {
-        treemap: {
-          distributed: true,
-        }
-      }
-    }
-    addChart(id, options)
-  })
-  .catch(error => console.error('Error fetching treemap data:', error));
-}
-function heatmap(url, id, title) {
-  fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    var options = {
-      series: data['data'],
+    },
+    heatmap: {
       chart: {
         height: 450,
         type: 'heatmap',
@@ -388,7 +286,6 @@ function heatmap(url, id, title) {
         categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
       },
       title: {
-        text: title,
         align: 'right',
         offsetY: 13,
         offsetX: 0
@@ -437,39 +334,258 @@ function heatmap(url, id, title) {
           }
         }
       },
-    };
-    addChart(id, options)
-  })
-  .catch(error => console.error('Error fetching heatmap data:', error));
+    },
+    treemap: {
+      chart: {
+        height: 450,
+        type: 'treemap'
+      },
+      title: {
+        align: 'right',
+        offsetY: 13,
+        offsetX: 0
+      },
+      legend: {
+        show: true,
+        position: 'top',
+        horizontalAlign: 'left',
+        offsetY: 0
+      },
+      dataLabels: {
+        enabled: true,
+        style: {
+          fontSize: '60px',
+        },
+        formatter: function(text, op) {
+          return [text, op.value]
+        },
+        offsetY: -4
+      },
+      stroke: {
+        width: 3,
+      },
+      plotOptions: {
+        treemap: {
+          distributed: true,
+        }
+      }
+    },
+  },
+  month: {
+    charts: [{
+      url: spark1,
+      id: `spark1-month`,
+      title: 'worked',
+      chart: 'spark'
+    }, {
+      url: spark2,
+      id: `spark2-month`,
+      title: 'slack',
+      chart: 'spark'
+    }, {
+      url: spark3,
+      id: `spark3-month`,
+      title: 'coding',
+      chart: 'spark'
+    }, {
+      url: spark4,
+      id: `spark4-month`,
+      title: 'git',
+      chart: 'spark'
+    }, {
+      url: timelineurl,
+      id: `timeline-month`,
+      title: 'Work hours timeline',
+      chart: 'timeline'
+    }, {
+      url: timeinapp,
+      id: `barchart-month`,
+      title: 'Time in app',
+      chart: 'barchart'
+    }, {
+      url: timeintab,
+      id: `barchart-tab-month`,
+      title: 'Time in browser tab',
+      chart: 'barchart'
+    }, {
+      url: lineintab,
+      id: `timeinapp-month`,
+      title: 'Time in app',
+      chart: 'linechart'
+    }, {
+      url: lineintab,
+      id: `timeinbrowser-month`,
+      title: 'Time in browser tab',
+      chart: 'linechart'
+    }, {
+      url: heatmapurl,
+      id: `heatmap-month`,
+      title: 'Work hours distribution',
+      chart: 'heatmap'
+    }, {
+      url: treemapurl,
+      id: `treemap-month`,
+      title: 'App hours distribution',
+      chart: 'treemap'
+    }]
+  },
+  weekly: {
+    charts: [{
+      url: spark1,
+      id: `spark1-weekly`,
+      title: 'worked',
+      chart: 'spark'
+    }, {
+      url: spark2,
+      id: `spark2-weekly`,
+      title: 'slack',
+      chart: 'spark'
+    }, {
+      url: spark3,
+      id: `spark3-weekly`,
+      title: 'coding',
+      chart: 'spark'
+    }, {
+      url: spark4,
+      id: `spark4-weekly`,
+      title: 'git',
+      chart: 'spark'
+    }, {
+      url: timelineurl,
+      id: `timeline-weekly`,
+      title: 'Work hours timeline',
+      chart: 'timeline'
+    }, {
+      url: timeinapp,
+      id: `barchart-weekly`,
+      title: 'Time in app',
+      chart: 'barchart'
+    }, {
+      url: timeintab,
+      id: `barchart-tab-weekly`,
+      title: 'Time in browser tab',
+      chart: 'barchart'
+    }, {
+      url: lineintab,
+      id: `timeinapp-weekly`,
+      title: 'Time in app',
+      chart: 'linechart'
+    }, {
+      url: lineintab,
+      id: `timeinbrowser-weekly`,
+      title: 'Time in browser tab',
+      chart: 'linechart'
+    }, {
+      url: heatmapurl,
+      id: `heatmap-weekly`,
+      title: 'Work hours distribution',
+      chart: 'heatmap'
+    }, {
+      url: treemapurl,
+      id: `treemap-weekly`,
+      title: 'App hours distribution',
+      chart: 'treemap'
+    }]
+  },
+  rt: {
+    charts: [{
+      url: spark1,
+      id: `spark1-rt`,
+      title: 'worked',
+      chart: 'spark'
+    }, {
+      url: spark2,
+      id: `spark2-rt`,
+      title: 'slack',
+      chart: 'spark'
+    }, {
+      url: spark3,
+      id: `spark3-rt`,
+      title: 'coding',
+      chart: 'spark'
+    }, {
+      url: spark4,
+      id: `spark4-rt`,
+      title: 'git',
+      chart: 'spark'
+    }, {
+      url: timelineurl,
+      id: `timeline-rt`,
+      title: 'Work hours timeline',
+      chart: 'timeline'
+    }, {
+      url: timeinapp,
+      id: `barchart-rt`,
+      title: 'Time in app',
+      chart: 'barchart'
+    }, {
+      url: timeintab,
+      id: `barchart-tab-rt`,
+      title: 'Time in browser tab',
+      chart: 'barchart'
+    }, {
+      url: lineintab,
+      id: `timeinapp-rt`,
+      title: 'Time in app',
+      chart: 'linechart'
+    }, {
+      url: lineintab,
+      id: `timeinbrowser-rt`,
+      title: 'Time in browser tab',
+      chart: 'linechart'
+    }, {
+      url: heatmapurl,
+      id: `heatmap-rt`,
+      title: 'Work hours distribution',
+      chart: 'heatmap'
+    }, {
+      url: treemapurl,
+      id: `treemap-rt`,
+      title: 'App hours distribution',
+      chart: 'treemap'
+    }]
+  }
 }
 
-const spark1 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-const spark2 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=slack&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-const spark3 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=coding&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-const spark4 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=git&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-const timeinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-const timeintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-const lineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=5&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-const lineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=5&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-const timelineurl = () => `https://api.tinybird.co/v0/pipes/timeline_2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-const heatmapurl = () => `https://api.tinybird.co/v0/pipes/heatmap.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&heatmap=1`
-const treemapurl = () => `https://api.tinybird.co/v0/pipes/treemap_v2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+async function fetchData(url) {
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+}
 
 function init() {
-  spark(spark1(), 'spark1', 'worked')
-  spark(spark2(), 'spark2', 'slack')
-  spark(spark3(), 'spark3', 'coding')
-  spark(spark4(), 'spark4', 'git')
-
-  heatmap(heatmapurl(), 'heatmap', 'Work hours distribution')
-  treemap(treemapurl(), 'treemap', 'App hours distribution')
-  timeline(timelineurl())
-
-  barchart(timeinapp(), 'barchart', 'Time in app')
-  barchart(timeintab(), 'barchart-tab', 'Time in browser tab')
-
-  linechart(lineinapp(), 'line-adwords', 'Time in app')
-  linechart(lineintab(), 'line-adwords-tab', 'Time in browser tab')
+  const dashboardType = getDashboardType();
+  const config = dashboards[dashboardType];
+  config.charts.forEach(async (chart) => {
+    try {
+      let data = await fetchData(chart.url());
+      data = data['data'];
+      let title = chart.title;
+      let chartConfig = Object.assign({}, dashboards.config[chart.chart], { series: [{ data }], id: chart.id, title: { text: chart.title } });
+      if (chart.chart == 'spark') {
+        const sum = data[0]["data"].reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        document.querySelector(`#${chart.title}-${getDashboardType()}`).textContent = `${Math.round(sum)} h.`;
+        data = data[0]["data"];
+        chartConfig = Object.assign({}, dashboards.config[chart.chart], { series: [{ data }], id: chart.id });
+      } else if (chart.chart == 'barchart') {
+        chartConfig = Object.assign({}, dashboards.config[chart.chart], { series: data, id: chart.id, title: { text: chart.title }, xaxis: { categories: data[0]["date"]} });
+      } else if (chart.chart == 'linechart') {
+        chartConfig = Object.assign({}, dashboards.config[chart.chart], { series: data, id: chart.id, title: { text: chart.title }, labels: data[0]["date"] });
+      } else if (chart.chart == 'heatmap') {
+        chartConfig = Object.assign({}, dashboards.config[chart.chart], { series: data, id: chart.id, title: { text: chart.title }});
+      } else if (chart.chart == 'treemap') {
+        const seriesData = data.sort((a, b) => b.y - a.y).filter(item => item.y > 1).map((item, i) => ({
+          x: item.x,
+          y: item.y,
+          fillColor: item.x.indexOf('.') > -1 ? `${colors[2]}${(255 - i * 10).toString(16)}` : `${colors[3]}${(255 - i * 10).toString(16)}`,
+        }));
+        chartConfig = Object.assign({}, dashboards.config[chart.chart], { series: [{ data: seriesData }], id: chart.id, title: { text: chart.title } });
+      }
+      addChart(chart.id, chartConfig);
+    } catch (error) {
+      console.error(`Error fetching data for chart '${chart.title}':`, error);
+    }
+  });
 }
 
 init()
