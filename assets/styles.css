@@ -167,7 +167,7 @@ body {
   width: 10px;
   border-radius: 100%;
 /* Oval: */
-background-image: linear-gradient(-180deg, #FFE27A 0%, #F689B9 100%);
+background-image: linear-gradient(-180deg, #FFEE92 0%, #FFEE92 100%);
 box-shadow: 0 -2px 4px 0 rgba(255, 237, 186, 0.70), 0 2px 4px 0 rgba(242, 141, 185, 0.70), inset 0 1px 0 0 rgba(255, 245, 217, 0.40);
   transition: transform 200ms ease-out;
   &:hover {
@@ -186,8 +186,8 @@ box-shadow: 0 -2px 4px 0 rgba(255, 237, 186, 0.70), 0 2px 4px 0 rgba(242, 141, 1
     display:block;
     box-sizing:border-box;
     border-radius:100%;
-    // border:1px solid #F28DB9;
-    box-shadow: 0 0 3px 3px #F28DB9;
+    border:1px solid #FF73DC;
+    box-shadow: 0 0 3px 3px #FFEE92;
   }
   &:after {
     content:"";
@@ -201,8 +201,8 @@ box-shadow: 0 -2px 4px 0 rgba(255, 237, 186, 0.70), 0 2px 4px 0 rgba(242, 141, 1
     display:block;
     box-sizing:border-box;
     border-radius:100%;
-    // border:1px solid #F28DB9;
-    box-shadow: 0 0 3px 3px #F28DB9;
+    border:1px solid #FF73DC;
+    box-shadow: 0 0 3px 3px #FF73DC;
   }
 }
  
@@ -219,8 +219,6 @@ box-shadow: 0 -2px 4px 0 rgba(255, 237, 186, 0.70), 0 2px 4px 0 rgba(242, 141, 1
      opacity:0;
    }
    100% {
-     // Puts delay between animation loops
-     // Must be equal to previous step 
      transform:scale(0.8);
      opacity:0;
    }
@@ -236,8 +234,6 @@ box-shadow: 0 -2px 4px 0 rgba(255, 237, 186, 0.70), 0 2px 4px 0 rgba(242, 141, 1
      transform:scale(0.1);
    }
    100% {
-     // Puts delay between animation loops
-     // Must be equal to previous step 
      transform:scale(0.8);
      opacity:0;
    }

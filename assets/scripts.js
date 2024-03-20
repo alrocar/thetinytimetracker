@@ -27,6 +27,12 @@ window.addEventListener('DOMContentLoaded', () => {
           height: 650,
           type: 'rangeBar'
         },
+        plotOptions: {
+          bar: {
+            isDumbbell: true,
+            horizontal: true
+          }
+        }
       },
     },
     "weekly": {
@@ -35,6 +41,12 @@ window.addEventListener('DOMContentLoaded', () => {
           height: 250,
           type: 'rangeBar'
         },
+        plotOptions: {
+          bar: {
+            isDumbbell: true,
+            horizontal: true
+          }
+        }
       }
     },
     "rt": {
@@ -43,6 +55,12 @@ window.addEventListener('DOMContentLoaded', () => {
           height: 100,
           type: 'rangeBar'
         },
+        plotOptions: {
+          bar: {
+            isDumbbell: true,
+            horizontal: true
+          }
+        }
       }
     }
   };
@@ -152,7 +170,7 @@ window.addEventListener('DOMContentLoaded', () => {
         } else if (chart.chart == 'hbarchart') {
           chartConfig = Object.assign({}, dashboards.config[chart.chart], { series: [{ data: data[0]["data"] }], id: chart.id, title: { text: chart.title }, xaxis: { categories: data[0]["categories"]} });
         } else if (chart.chart == 'timeline') {
-          chartConfig = Object.assign({}, dashboards.config[chart.chart], { series: [{ data }], id: chart.id, title: { text: chart.title }, chart: dashboardOptions[getDashboardType()]["timeline"]["chart"] });
+          chartConfig = Object.assign({}, dashboards.config[chart.chart], { series: [{ data }], id: chart.id, title: { text: chart.title }, chart: dashboardOptions[getDashboardType()]["timeline"]["chart"], plotOptions: dashboardOptions[getDashboardType()]["timeline"]["plotOptions"] });
         }
         addChart(chart.id, chartConfig);
       } catch (error) {
