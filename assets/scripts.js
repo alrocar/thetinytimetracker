@@ -116,8 +116,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const sparkrt4 = () => `https://api.tinybird.co/v0/pipes/sparks_rt.json?token=${token}&type=git&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
   const timeinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
   const timeintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const lineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=5&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const lineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=5&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+  const lineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=5&offset=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+  const lineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=5&offset=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
   const rtapp = () => `https://api.tinybird.co/v0/pipes/active_app.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
   const rttab = () => `https://api.tinybird.co/v0/pipes/active_tab.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
   const timelineurl = () => `https://api.tinybird.co/v0/pipes/timeline_2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
@@ -602,22 +602,22 @@ window.addEventListener('DOMContentLoaded', () => {
       }, {
         url: timeinapp,
         id: `barchart-month`,
-        title: 'Time in app',
+        title: 'Time in app (top 3)',
         chart: 'barchart'
       }, {
         url: timeintab,
         id: `barchart-tab-month`,
-        title: 'Time in browser tab',
+        title: 'Time in browser tab (top 3)',
         chart: 'barchart'
       }, {
-        url: lineintab,
+        url: lineinapp,
         id: `timeinapp-month`,
-        title: 'Time in app',
+        title: 'Time in app (others)',
         chart: 'linechart'
       }, {
         url: lineintab,
         id: `timeinbrowser-month`,
-        title: 'Time in browser tab',
+        title: 'Time in browser tab (others)',
         chart: 'linechart'
       }, {
         url: heatmapurl,
@@ -660,22 +660,22 @@ window.addEventListener('DOMContentLoaded', () => {
       }, {
         url: timeinapp,
         id: `barchart-weekly`,
-        title: 'Time in app',
+        title: 'Time in app (top 3)',
         chart: 'barchart'
       }, {
         url: timeintab,
         id: `barchart-tab-weekly`,
-        title: 'Time in browser tab',
+        title: 'Time in browser tab (top 3)',
         chart: 'barchart'
       }, {
         url: lineinapp,
         id: `timeinapp-weekly`,
-        title: 'Time in app',
+        title: 'Time in app (others)',
         chart: 'linechart'
       }, {
         url: lineintab,
         id: `timeinbrowser-weekly`,
-        title: 'Time in browser tab',
+        title: 'Time in browser tab (others)',
         chart: 'linechart'
       }, {
         url: heatmapurl,
