@@ -65,8 +65,8 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  var colors = ["#FFEE92", "#FF73DC", "#63FFE9", "#A4FFAF", "#FEFEFE"]
-  //var colors = ["#FFA07A", "#ADD8E6", "#90EE90", "#FFD700", "#DDA0DD"];
+  var colors = ["#FFEE92", "#FF73DC", "#63FFE9", "#A4FFAF", "#FEFEFE", "#FFA07A", "#ADD8E6", "#90EE90", "#FFD700", "#DDA0DD"]
+  //var colors = [];
 
   //var colors = ["#003f5c","#2f4b7c","#665191","#a05195","#d45087","#f95d6a","#ff7c43","#ffa600"].reverse()
   window.charts = {};
@@ -120,6 +120,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const lineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=5&offset=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
   const rtapp = () => `https://api.tinybird.co/v0/pipes/active_app.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
   const rttab = () => `https://api.tinybird.co/v0/pipes/active_tab.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+  const rtlineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=10&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&duration=0`
+  const rtlineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=10&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&duration=0`
   const timelineurl = () => `https://api.tinybird.co/v0/pipes/timeline_2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
   const heatmapurl = () => `https://api.tinybird.co/v0/pipes/heatmap.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&heatmap=1`
   const treemapurl = () => `https://api.tinybird.co/v0/pipes/treemap_v2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
@@ -411,7 +413,7 @@ window.addEventListener('DOMContentLoaded', () => {
           type: 'area',
           stacked: false,
           zoom: {
-            enabled: false
+            enabled: true
           },
           dropShadow: {
             enabled: false,
@@ -729,7 +731,17 @@ window.addEventListener('DOMContentLoaded', () => {
         url: timelineurl,
         id: `timeline-rt`,
         chart: 'timeline'
-      }]
+      }, {
+        url: rtlineinapp,
+        id: `timeinappline-rt`,
+        title: 'Time in app',
+        chart: 'linechart'
+      }, {
+        url: rtlineintab,
+        id: `timeinbrowserline-rt`,
+        title: 'Time in browser tab',
+        chart: 'linechart'
+      }, ]
     }
   }
 
