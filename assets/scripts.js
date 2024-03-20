@@ -650,7 +650,7 @@ window.addEventListener('DOMContentLoaded', () => {
         title: 'Time in browser tab',
         chart: 'barchart'
       }, {
-        url: lineintab,
+        url: lineinapp,
         id: `timeinapp-weekly`,
         title: 'Time in app',
         chart: 'linechart'
