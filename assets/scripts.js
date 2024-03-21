@@ -1,3 +1,5 @@
+var tbSemver = '';
+
 window.addEventListener('DOMContentLoaded', () => {
   var token = localStorage.getItem('token');
   if (!token) {
@@ -15,6 +17,35 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('last-update').textContent = `${formattedDate}`;
   }
 
+  function ddate() {
+    let element = document.querySelector('.btn.toggled');
+    if (element) {
+      if (element.id.indexOf('rt') != -1) {
+        return today();
+      } else {
+        return yesterday();
+      }
+    }
+  }
+
+  function today() {
+    let currentDate = new Date();
+    let year = currentDate.getFullYear();
+    let month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    let day = String(currentDate.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  function yesterday() {
+    let currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 1);
+    let year = currentDate.getFullYear();
+    let month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    let day = String(currentDate.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
 
   function getDashboardType() {
     return dashboardType;
@@ -50,6 +81,20 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     },
     "rt": {
+      "timeline": {
+        chart: {
+          height: 100,
+          type: 'rangeBar'
+        },
+        plotOptions: {
+          bar: {
+            isDumbbell: true,
+            horizontal: true
+          }
+        }
+      }
+    },
+    "yes": {
       "timeline": {
         chart: {
           height: 100,
@@ -107,24 +152,24 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  const spark1 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const spark2 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=slack&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const spark3 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=coding&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const spark4 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=git&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const sparkrt2 = () => `https://api.tinybird.co/v0/pipes/sparks_rt.json?token=${token}&type=slack&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const sparkrt3 = () => `https://api.tinybird.co/v0/pipes/sparks_rt.json?token=${token}&type=coding&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const sparkrt4 = () => `https://api.tinybird.co/v0/pipes/sparks_rt.json?token=${token}&type=git&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const timeinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const timeintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const lineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=5&offset=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const lineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=5&offset=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const rtapp = () => `https://api.tinybird.co/v0/pipes/active_app.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const rttab = () => `https://api.tinybird.co/v0/pipes/active_tab.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const rtlineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=10&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&duration=0`
-  const rtlineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=10&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&duration=0`
-  const timelineurl = () => `https://api.tinybird.co/v0/pipes/timeline_2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
-  const heatmapurl = () => `https://api.tinybird.co/v0/pipes/heatmap.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&heatmap=1`
-  const treemapurl = () => `https://api.tinybird.co/v0/pipes/treemap_v2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}`
+  const spark1 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const spark2 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=slack&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const spark3 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=coding&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const spark4 = () => `https://api.tinybird.co/v0/pipes/sparks.json?token=${token}&type=git&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const sparkrt2 = () => `https://api.tinybird.co/v0/pipes/sparks_rt.json?token=${token}&type=slack&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const sparkrt3 = () => `https://api.tinybird.co/v0/pipes/sparks_rt.json?token=${token}&type=coding&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const sparkrt4 = () => `https://api.tinybird.co/v0/pipes/sparks_rt.json?token=${token}&type=git&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const timeinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const timeintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const lineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=5&offset=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const lineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=5&offset=3&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const rtapp = () => `https://api.tinybird.co/v0/pipes/active_app.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const rttab = () => `https://api.tinybird.co/v0/pipes/active_tab.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const rtlineinapp = () => `https://api.tinybird.co/v0/pipes/active_app_by_day.json?limit=10&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&duration=0&date=${ddate()}`
+  const rtlineintab = () => `https://api.tinybird.co/v0/pipes/active_tab_by_day.json?limit=10&token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&duration=0&date=${ddate()}`
+  const timelineurl = () => `https://api.tinybird.co/v0/pipes/timeline_2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
+  const heatmapurl = () => `https://api.tinybird.co/v0/pipes/heatmap.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&heatmap=1&date=${ddate()}`
+  const treemapurl = () => `https://api.tinybird.co/v0/pipes/treemap_v2.json?token=${token}&dashboard=${getDashboardType()}&__tb__semver=${tbSemver}&date=${ddate()}`
 
   async function fetchData(url) {
     const response = await fetch(url);
@@ -214,7 +259,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  var tbSemver = '';
+  
   var dashboardType = 'month';
   const toggledButtonId = localStorage.getItem('toggledButtonId');
   let button = undefined;
@@ -512,26 +557,26 @@ window.addEventListener('DOMContentLoaded', () => {
             colorScale: {
               ranges: [{
                   from: 0,
-                  to: 7,
-                  name: 'low',
+                  to: 7.5,
+                  name: 'funcionario <7.5h',
                   color: colors[2]
                 },
                 {
-                  from: 7,
-                  to: 9,
-                  name: 'standard',
+                  from: 7.5,
+                  to: 8.5,
+                  name: 'OK ~8h',
                   color: colors[3]
                 },
                 {
-                  from: 9,
-                  to: 10,
-                  name: 'extended',
+                  from: 8.5,
+                  to: 9,
+                  name: 'are you maybe working <strong>too much</strong>?',
                   color: colors[0]
                 },
                 {
-                  from: 11,
+                  from: 9,
                   to: 24,
-                  name: '🚨',
+                  name: 'arroba policia >9h',
                   color: colors[1]
                 }
               ]
@@ -624,7 +669,7 @@ window.addEventListener('DOMContentLoaded', () => {
       }, {
         url: heatmapurl,
         id: `heatmap-month`,
-        title: 'Work hours distribution',
+        title: 'Burnout paradise',
         chart: 'heatmap'
       }, {
         url: treemapurl,
@@ -739,6 +784,58 @@ window.addEventListener('DOMContentLoaded', () => {
       }, {
         url: rtlineintab,
         id: `timeinbrowserline-rt`,
+        title: 'Time in browser tab',
+        chart: 'linechart'
+      }, ]
+    },
+    yes: {
+      charts: [{
+        url: spark1,
+        id: `spark1-yes`,
+        title: 'worked',
+        chart: 'spark'
+      }, {
+        url: sparkrt2,
+        id: `spark2-yes`,
+        title: 'slack',
+        chart: 'sparkrt'
+      }, {
+        url: sparkrt3,
+        id: `spark3-yes`,
+        title: 'coding',
+        chart: 'sparkrt'
+      }, {
+        url: sparkrt4,
+        id: `spark4-yes`,
+        title: 'git',
+        chart: 'sparkrt'
+      }, {
+        url: rtapp,
+        id: `timeinapp-yes`,
+        title: 'Time in app',
+        chart: 'hbarchart'
+      }, {
+        url: rttab,
+        id: `timeinbrowser-yes`,
+        title: 'Time in browser tab',
+        chart: 'hbarchart'
+      }, {
+        url: treemapurl,
+        id: `treemap-yes`,
+        title: 'App hours distribution',
+        chart: 'treemap'
+      }, {
+        url: timelineurl,
+        id: `timeline-yes`,
+        chart: 'timeline'
+      }, {
+        url: rtlineinapp,
+        id: `timeinappline-yes`,
+        title: 'Time in app',
+        chart: 'linechart'
+      }, {
+        url: rtlineintab,
+        id: `timeinbrowserline-yes`,
         title: 'Time in browser tab',
         chart: 'linechart'
       }, ]
